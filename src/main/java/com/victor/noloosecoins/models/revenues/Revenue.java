@@ -1,4 +1,4 @@
-package com.victor.noloosecoins.models;
+package com.victor.noloosecoins.models.revenues;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

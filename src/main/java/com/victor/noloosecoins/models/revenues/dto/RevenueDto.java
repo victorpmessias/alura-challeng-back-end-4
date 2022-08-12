@@ -1,25 +1,24 @@
-package com.victor.noloosecoins.models.expense.dto;
+package com.victor.noloosecoins.models.revenues.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.victor.noloosecoins.models.expense.Expense;
+import com.victor.noloosecoins.models.revenues.Revenue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ExpenseDto {
-
-
+public class RevenueDto {
     private final Long id;
     private final String description;
     private final BigDecimal value;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private final LocalDate date;
 
-    public ExpenseDto(Expense expense){
-        this.id  = expense.getId();
-        this.description = expense.getDescription();
-        this.value = expense.getValue();
-        this.date = expense.getDate();
+
+    public RevenueDto(Revenue revenue){
+        this.id  = revenue.getId();
+        this.description = revenue.getDescription();
+        this.value = revenue.getValue();
+        this.date = revenue.getDate();
     }
 
     public Long getId() {
@@ -37,4 +36,5 @@ public class ExpenseDto {
     public LocalDate getDate() {
         return date;
     }
+
 }

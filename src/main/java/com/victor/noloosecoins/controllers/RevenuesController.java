@@ -1,27 +1,52 @@
 package com.victor.noloosecoins.controllers;
 
-import com.victor.noloosecoins.models.Revenue;
-import com.victor.noloosecoins.repositories.RevenueRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.victor.noloosecoins.models.revenues.dto.RevenueDto;
+import com.victor.noloosecoins.models.revenues.forms.NewRevenueForm;
+import com.victor.noloosecoins.services.RevenueService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/revenues")
 public class RevenuesController {
 
+    private final RevenueService service;
 
-    private final RevenueRepository repository;
-
-    public RevenuesController(RevenueRepository repository) {
-        this.repository = repository;
+    public RevenuesController(RevenueService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Revenue> getAll(){
-        return repository.findAll();
+    public Page<RevenueDto> getAll(Pageable pageable) {
+        return service.listAll(pageable);
+    }
+
+    @GetMapping("/{id}")
+    public RevenueDto getExpenseById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteExpenseById(@PathVariable Long id) {
+        service.deleteExpense(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping
+    public RevenueDto registerNewExpense(@RequestBody @Valid NewRevenueForm form) {
+        return service.registerNewExpense(form);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public RevenueDto updateExpenseRegistry(@RequestBody @Valid NewRevenueForm form, @PathVariable Long id) {
+        return service.updateRegistry(form, id);
     }
 
 }
