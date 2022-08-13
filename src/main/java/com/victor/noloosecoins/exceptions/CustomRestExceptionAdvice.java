@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.persistence.EntityNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import org.postgresql.util.PSQLException;
 
 @RestControllerAdvice
 public class CustomRestExceptionAdvice {
@@ -51,7 +52,7 @@ public class CustomRestExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponseDto handler(EntityNotFoundException ex) {
         String message = "Resource Not Found";
-        FieldErroDto error = new FieldErroDto("date", ex.getMessage());
+        FieldErroDto error = new FieldErroDto("id", ex.getMessage());
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
         responseDto.setMessage(message);
@@ -66,7 +67,30 @@ public class CustomRestExceptionAdvice {
     public ExceptionResponseDto handler(SQLIntegrityConstraintViolationException ex) {
 
         String fieldMessage =
-                ex.getMessage().contains("expenses.description")
+                ex.getMessage().contains(".description")
+                        ? "There is already an expense registry with given description"
+                        : "Error";
+
+
+        String message = "Error trying fetch data";
+        FieldErroDto error = new FieldErroDto("date", fieldMessage);
+
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+    }
+
+
+    @ExceptionHandler(PSQLException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(PSQLException ex) {
+
+        String fieldMessage =
+                ex.getMessage().contains("_description")
                         ? "There is already an expense registry with given description"
                         : "Error";
 
