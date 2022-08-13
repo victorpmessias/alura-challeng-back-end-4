@@ -1,6 +1,4 @@
 FROM openjdk:17-jdk-slim
-RUN adduser --system --group spring
-USE spring:spring
 RUN mvn install jar:jar \
     && cp -a target/*.jar app.jar \
     && rm -rf target "$HOME/.m2"
