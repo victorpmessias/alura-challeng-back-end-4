@@ -1,5 +1,5 @@
 FROM openjdk:17-jdk-slim
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN adduser --system --group spring
 USER spring:spring
 
 ARG JAR_FILE=--from=build
