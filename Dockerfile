@@ -1,7 +1,7 @@
 FROM maven:3.8.6-amazoncorretto-17 AS build
 COPY src /home/no-loose-coins/src
 COPY pom.xml /home/no-loose-coins
-RUN mvn -f /home/no-loose-coins/pom.xml clean package
+RUN mvn -f /home/no-loose-coins/pom.xml clean package -DskipTests
 
 
 FROM openjdk:17-jdk-slim
