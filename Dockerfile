@@ -1,6 +1,6 @@
-FROM maven:3.6.0-jdk-11-slim AS build
+FROM maven:3.6.0-jdk-17-slim AS build
 COPY src /home/no-loose-coins/src
-COPY pom.xml /home/app
+COPY pom.xml /home/no-loose-coins
 RUN mvn -f /home/no-loose-coins/pom.xml clean package
 
 
