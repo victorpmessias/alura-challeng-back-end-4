@@ -1,6 +1,7 @@
 package com.victor.noloosecoins.models.expense.forms;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.victor.noloosecoins.models.category.Category;
 import com.victor.noloosecoins.models.expense.Expense;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,14 +19,24 @@ public class NewExpenseForm {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
+    private Long category = 1L;
 
     public NewExpenseForm() {
     }
 
-    public NewExpenseForm(String description, BigDecimal value, LocalDate date) {
+    public NewExpenseForm(String description, BigDecimal value, LocalDate date, Long category) {
         this.description = description;
         this.value = value;
         this.date = date;
+        this.category = category;
+    }
+
+    public Long getCategory() {
+        return category;
+    }
+
+    public void setCategory(Long category) {
+        this.category = category;
     }
 
     public String getDescription() {

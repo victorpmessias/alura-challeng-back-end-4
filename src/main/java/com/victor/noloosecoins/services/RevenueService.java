@@ -41,8 +41,8 @@ public class RevenueService {
     }
 
     private Revenue getRevenueById(Long id){
-        return repository.findById(id).orElseThrow(() -> {return new EntityNotFoundException("Can't find a expense entity with id: " + id);
-        });
+        return repository.findById(id).orElseThrow(() ->  new EntityNotFoundException("Can't find a expense entity with id: " + id)
+        );
     }
 
     public RevenueDto getById(Long id) {

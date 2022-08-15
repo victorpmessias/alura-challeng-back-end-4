@@ -2,6 +2,7 @@ package com.victor.noloosecoins.controllers;
 
 import com.victor.noloosecoins.models.expense.dto.ExpenseDto;
 import com.victor.noloosecoins.models.expense.forms.NewExpenseForm;
+import com.victor.noloosecoins.services.CategoryService;
 import com.victor.noloosecoins.services.ExpenseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

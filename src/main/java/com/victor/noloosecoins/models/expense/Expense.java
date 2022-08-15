@@ -1,5 +1,7 @@
 package com.victor.noloosecoins.models.expense;
 
+import com.victor.noloosecoins.models.category.Category;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,11 +10,15 @@ import java.time.LocalDate;
 @Table(name = "expenses")
 public class Expense {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
     private BigDecimal value;
     private LocalDate date;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Long getId() {
         return id;
@@ -46,5 +52,11 @@ public class Expense {
         this.date = date;
     }
 
+    public Category getCategory() {
+        return category;
+    }
 
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
