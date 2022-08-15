@@ -2,7 +2,7 @@ spring:
   application:
     name: no-loose-coins
   datasource:
-    url: jdbc:${DATABASE_URL}
+    url: jdbc:${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
