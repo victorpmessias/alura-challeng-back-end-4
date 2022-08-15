@@ -1,6 +1,7 @@
 package com.victor.noloosecoins.services;
 
 import com.victor.noloosecoins.models.category.Category;
+import com.victor.noloosecoins.models.category.dto.CategoryDto;
 import com.victor.noloosecoins.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,20 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public List<Category> getCategories() {
-        return repository.findAll();
+    public List<CategoryDto> getCategories() {
+        List<Category> categories = repository.findAll();
+        return categories.stream().map(CategoryDto::new).toList();
     }
 
-    public Category getBydId(Long id) {
-        return repository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException("Can't find a category with id: " + id);
-        });
+    public Category findById(Long id) {
+        return repository.findById(id).orElseThrow(() ->
+             new EntityNotFoundException("Can't find a category with id: " + id)
+        );
+
+    }
+
+    public CategoryDto getBydId(Long id) {
+        Category category = findById(id);
+        return new CategoryDto(category);
     }
 }

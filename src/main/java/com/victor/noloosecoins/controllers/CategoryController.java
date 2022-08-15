@@ -1,6 +1,7 @@
 package com.victor.noloosecoins.controllers;
 
 import com.victor.noloosecoins.models.category.Category;
+import com.victor.noloosecoins.models.category.dto.CategoryDto;
 import com.victor.noloosecoins.services.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,12 +21,12 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> listCategories(){
+    public List<CategoryDto> listCategories(){
         return service.getCategories();
     }
 
     @GetMapping("/{id}")
-    public Category getCategoryByd(@PathVariable Long id){
+    public CategoryDto getCategoryByd(@PathVariable Long id){
         return service.getBydId(id);
     }
 }
