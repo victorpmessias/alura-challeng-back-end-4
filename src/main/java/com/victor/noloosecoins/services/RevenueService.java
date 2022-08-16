@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 
 @Service
 public class RevenueService {
@@ -58,8 +59,16 @@ public class RevenueService {
         }
     }
 
+
+    public Page<RevenueDto> searchRevenueByMonth(int year, int month, Pageable pageable) {
+        LocalDate initialDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = LocalDate.ofEpochDay(initialDate.toEpochDay()).plusMonths(1).withDayOfMonth(1).minusDays(1);
+        Page<Revenue> revenue = repository.findByDateBetween(initialDate, endDate, pageable);
+        return revenue.map(RevenueDto::new);
+
     public Page<RevenueDto> listAllByDescription(Pageable pageable, String description) {
         Page<Revenue> revenues = repository.findAllByDescriptionContains(description, pageable);
         return revenues.map(RevenueDto::new);
+
     }
 }
