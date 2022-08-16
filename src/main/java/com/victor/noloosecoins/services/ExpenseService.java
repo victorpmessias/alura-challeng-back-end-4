@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 
 @Service
 public class ExpenseService {
@@ -65,5 +66,17 @@ public class ExpenseService {
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("Can't find a expense entity with id: " + id);
         }
+    }
+
+    public Page<ExpenseDto> getAllByDescription(String description, Pageable pageable) {
+        Page<Expense> expenses = repository.findByDescriptionContains(description, pageable);
+        return expenses.map(ExpenseDto::new);
+    }
+
+    public Page<ExpenseDto> searchExpenseByMonth(int year, int month, Pageable pageable) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = LocalDate.ofEpochDay(startDate.toEpochDay()).plusMonths(1).withDayOfMonth(1).minusDays(1);
+        Page<Expense> expenses = repository.findByDateBetween(startDate, endDate, pageable);
+        return expenses.map(ExpenseDto::new);
     }
 }

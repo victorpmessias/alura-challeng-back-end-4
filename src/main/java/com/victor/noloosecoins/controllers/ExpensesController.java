@@ -23,8 +23,12 @@ public class ExpensesController {
     }
 
     @GetMapping
-    public Page<ExpenseDto> getAll(Pageable pageable) {
-        return service.listAll(pageable);
+    public Page<ExpenseDto> getAll(@RequestParam(required = false) String description, Pageable pageable) {
+        if(description != null){
+            return service.getAllByDescription(description, pageable);
+        }else {
+            return service.listAll(pageable);
+        }
     }
 
     @GetMapping("/{id}")
@@ -48,5 +52,10 @@ public class ExpensesController {
     @Transactional
     public ExpenseDto updateExpenseRegistry(@RequestBody @Valid NewExpenseForm form, @PathVariable Long id) {
         return service.updateRegistry(form, id);
+    }
+
+    @GetMapping("/{year}/{month}")
+    public Page<ExpenseDto> getExpenseByMonth(@PathVariable int year, @PathVariable int month, Pageable pageable) {
+        return service.searchExpenseByMonth(year, month, pageable);
     }
 }
