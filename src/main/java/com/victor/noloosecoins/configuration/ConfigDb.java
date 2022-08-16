@@ -12,14 +12,17 @@ import java.net.URISyntaxException;
 @Configuration
 @Profile("prod")
 public class ConfigDb {
-    String url;
-    String user;
-    String password;
+
 
     @Bean
     public DataSource getDataSource() {
+        URI uri = getDbUri();
 
-        setDbData();
+        String[] userAndPassword = uri.getUserInfo().split(":");
+        String user = userAndPassword[0];
+        String password = userAndPassword[1];
+        String url = String.format("jdbc:postgresql://%s:%d/%s", uri.getHost(), uri.getPort(), uri.getPath().substring(1));
+
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
         dataSourceBuilder.url(url);
@@ -28,14 +31,10 @@ public class ConfigDb {
         return dataSourceBuilder.build();
     }
 
-    private void setDbData() {
+    private URI getDbUri() {
         try {
             String uriString = System.getenv("DATABASE_URL");
-            URI uri = new URI(uriString);
-            String[] userAndPassword = uri.getUserInfo().split(":");
-            user = userAndPassword[0];
-            password = userAndPassword[1];
-            url = String.format("jdbc:postgresql://%s:%d/%s", uri.getHost(), uri.getPort(), uri.getPath().substring(1));
+            return new URI(uriString);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

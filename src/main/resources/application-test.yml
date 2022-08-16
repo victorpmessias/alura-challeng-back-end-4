@@ -1,0 +1,19 @@
+spring:
+  flyway:
+    enabled: true
+    locations: filesystem:.\src\test\resources\db\migration\h2
+    baseline-on-migrate: true
+  application:
+    name: no-loose-coins
+  datasource:
+    url: jdbc:h2:mem:service
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
