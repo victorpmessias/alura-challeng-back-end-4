@@ -51,4 +51,8 @@ public class RevenuesController {
         return service.updateRegistry(form, id);
     }
 
+    @GetMapping("/{year}/{month}")
+    public Page<RevenueDto> getRevenueByMonth(@PathVariable int year, @PathVariable int month, Pageable pageable){
+        return service.searchRevenueByMonth(year, month, pageable);
+    }
 }
