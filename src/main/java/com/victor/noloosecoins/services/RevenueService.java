@@ -65,7 +65,7 @@ public class RevenueService {
         LocalDate endDate = LocalDate.ofEpochDay(initialDate.toEpochDay()).plusMonths(1).withDayOfMonth(1).minusDays(1);
         Page<Revenue> revenue = repository.findByDateBetween(initialDate, endDate, pageable);
         return revenue.map(RevenueDto::new);
-
+    }
     public Page<RevenueDto> listAllByDescription(Pageable pageable, String description) {
         Page<Revenue> revenues = repository.findAllByDescriptionContains(description, pageable);
         return revenues.map(RevenueDto::new);
