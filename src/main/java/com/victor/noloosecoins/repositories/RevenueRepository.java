@@ -10,5 +10,8 @@ import java.util.List;
 
 public interface RevenueRepository extends JpaRepository<Revenue, Long> {
 
+
     Page<Revenue> findByDateBetween(LocalDate start, LocalDate end, Pageable pageable);
+    Page<Revenue> findAllByDescriptionContains(String description, Pageable pageable);
+
 }
