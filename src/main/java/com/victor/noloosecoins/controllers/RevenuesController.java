@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/revenues")
@@ -39,8 +40,9 @@ public class RevenuesController {
     }
 
     @PostMapping
-    public RevenueDto registerNewExpense(@RequestBody @Valid NewRevenueForm form) {
-        return service.registerNewExpense(form);
+    public ResponseEntity<RevenueDto> registerNewExpense(@RequestBody @Valid NewRevenueForm form) {
+        RevenueDto revenue = service.registerNewExpense(form);
+        return ResponseEntity.created(URI.create("/revenues/"+revenue.getId())).body(revenue);
     }
 
     @PutMapping("/{id}")

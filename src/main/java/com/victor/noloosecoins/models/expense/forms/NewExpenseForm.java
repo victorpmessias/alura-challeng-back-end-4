@@ -1,7 +1,6 @@
 package com.victor.noloosecoins.models.expense.forms;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.victor.noloosecoins.models.category.Category;
 import com.victor.noloosecoins.models.expense.Expense;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;

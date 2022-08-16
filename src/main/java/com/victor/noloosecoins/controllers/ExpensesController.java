@@ -2,7 +2,6 @@ package com.victor.noloosecoins.controllers;
 
 import com.victor.noloosecoins.models.expense.dto.ExpenseDto;
 import com.victor.noloosecoins.models.expense.forms.NewExpenseForm;
-import com.victor.noloosecoins.services.CategoryService;
 import com.victor.noloosecoins.services.ExpenseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/expenses")
@@ -39,8 +39,9 @@ public class ExpensesController {
     }
 
     @PostMapping
-    public ExpenseDto registerNewExpense(@RequestBody @Valid NewExpenseForm form) {
-        return service.registerNewExpense(form);
+    public ResponseEntity<ExpenseDto> registerNewExpense(@RequestBody @Valid NewExpenseForm form) {
+        ExpenseDto expense = service.registerNewExpense(form);
+        return ResponseEntity.created(URI.create("/expenses/"+expense.getId())).body(expense);
     }
 
     @PutMapping("/{id}")

@@ -1,6 +1,5 @@
 package com.victor.noloosecoins.controllers;
 
-import com.victor.noloosecoins.models.category.Category;
 import com.victor.noloosecoins.models.category.dto.CategoryDto;
 import com.victor.noloosecoins.services.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;

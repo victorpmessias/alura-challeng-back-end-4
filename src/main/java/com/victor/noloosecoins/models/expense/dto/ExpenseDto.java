@@ -1,7 +1,6 @@
 package com.victor.noloosecoins.models.expense.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.victor.noloosecoins.models.category.Category;
 import com.victor.noloosecoins.models.category.dto.CategoryDto;
 import com.victor.noloosecoins.models.expense.Expense;
 

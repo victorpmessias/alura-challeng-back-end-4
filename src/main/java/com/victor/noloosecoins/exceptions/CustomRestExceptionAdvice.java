@@ -1,5 +1,6 @@
 package com.victor.noloosecoins.exceptions;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.persistence.EntityNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
-import org.postgresql.util.PSQLException;
 
 @RestControllerAdvice
 public class CustomRestExceptionAdvice {
