@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 
 @RestController
@@ -24,8 +25,12 @@ public class RevenuesController {
     }
 
     @GetMapping
-    public Page<RevenueDto> getAll(Pageable pageable) {
+    public Page<RevenueDto> getAll(Pageable pageable, @RequestParam(required = false) String description) {
+        if(description != null){
+            return service.listAllByDescription(pageable, description);
+        }else{
         return service.listAll(pageable);
+        }
     }
 
     @GetMapping("/{id}")
