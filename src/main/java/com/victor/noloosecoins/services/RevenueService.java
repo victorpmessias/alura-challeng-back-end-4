@@ -57,4 +57,9 @@ public class RevenueService {
             throw new EntityNotFoundException("Can't find a expense entity with id: " + id);
         }
     }
+
+    public Page<RevenueDto> listAllByDescription(Pageable pageable, String description) {
+        Page<Revenue> revenues = repository.findAllByDescriptionContains(description, pageable);
+        return revenues.map(RevenueDto::new);
+    }
 }
