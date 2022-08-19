@@ -15,6 +15,16 @@ public class Revenue {
     private BigDecimal value;
     private LocalDate date;
 
+    public Revenue() {
+    }
+
+    public Revenue(Long id, String description, BigDecimal value, LocalDate date) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        this.date = date;
+    }
+
     public Long getId() {
         return id;
     }

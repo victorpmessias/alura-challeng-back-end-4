@@ -10,8 +10,7 @@ public class Summary {
     private BigDecimal monthBalance;
     private Map<String, BigDecimal> totalExpenseByCategory;
 
-    public Summary() {
-    }
+
 
     public Summary(BigDecimal totalRevenues, BigDecimal totalExpenses, BigDecimal monthBalance, Map<String, BigDecimal> totalExpenseByCategory) {
         this.totalRevenues = totalRevenues;

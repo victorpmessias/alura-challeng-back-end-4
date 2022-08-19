@@ -20,6 +20,18 @@ public class Expense {
     @JoinColumn(name = "category_id")
     private Category category;
 
+
+    public Expense() {
+    }
+
+    public Expense(Long id, String description, BigDecimal value, LocalDate date, Category category) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        this.date = date;
+        this.category = category;
+    }
+
     public Long getId() {
         return id;
     }

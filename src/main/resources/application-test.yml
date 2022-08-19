@@ -1,7 +1,7 @@
 spring:
   flyway:
     enabled: true
-    locations: filesystem:.\src\test\resources\db\migration\h2
+    locations: filesystem:.${TEST_SCRIPT_FLYWAY_DIR}
     baseline-on-migrate: true
   application:
     name: no-loose-coins
