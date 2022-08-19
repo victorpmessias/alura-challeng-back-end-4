@@ -106,4 +106,22 @@ public class CustomRestExceptionAdvice {
 
         return responseDto;
     }
+
+
+    @ExceptionHandler(InvalidDateArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(InvalidDateArgumentException ex) {
+
+
+        String message = "Error during parse";
+        FieldErroDto error = new FieldErroDto("parameters", ex.getMessage());
+
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+    }
 }

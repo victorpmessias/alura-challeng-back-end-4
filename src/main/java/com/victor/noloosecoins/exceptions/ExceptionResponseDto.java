@@ -8,10 +8,6 @@ public class ExceptionResponseDto {
     private List<FieldErroDto> errors;
     private Long timestamp;
 
-    public ExceptionResponseDto() {
-    }
-
-
 
     public String getMessage() {
         return message;
