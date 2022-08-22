@@ -124,4 +124,21 @@ public class CustomRestExceptionAdvice {
 
         return responseDto;
     }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(InvalidEmailException ex) {
+
+
+        String message = "Error";
+        FieldErroDto error = new FieldErroDto("parameters", ex.getMessage());
+
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+    }
 }

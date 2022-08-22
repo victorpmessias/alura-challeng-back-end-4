@@ -25,7 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping
-    public ResponseEntity<TokenDto> authenticate(@RequestBody @Valid LoginForm form){
+    public ResponseEntity<Object> authenticate(@RequestBody @Valid LoginForm form){
 
         UsernamePasswordAuthenticationToken loginData = form.convertToAuthToken();
 
@@ -33,8 +33,9 @@ public class AuthenticationController {
            Authentication authentication = authManager.authenticate(loginData);
            String token = tokenService.generateToken(authentication);
            return  ResponseEntity.ok(new TokenDto(token, "Bearer"));
-       } catch (AuthenticationException e) {
-           return ResponseEntity.badRequest().build();
+       } catch (Exception e) {
+           return ResponseEntity.badRequest().body(e.getMessage());
        }
     }
+
 }
