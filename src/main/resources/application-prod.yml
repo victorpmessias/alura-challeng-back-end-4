@@ -9,9 +9,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL81Dialect
   flyway:
-    locations: db/migrations/postgree
+    locations: db/migration/postgree
 
 
 server:
   port: ${PORT}
 
+
+security:
+  token:
+    issuer: ${JWT_ISSUER}
+    expiration: ${EXPIRATION_TIME}
+    secret: ${JWT_SECRET}
