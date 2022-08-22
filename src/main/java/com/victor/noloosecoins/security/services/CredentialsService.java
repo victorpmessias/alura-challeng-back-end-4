@@ -1,11 +1,12 @@
 package com.victor.noloosecoins.security.services;
 
 import com.victor.noloosecoins.security.models.Credentials;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CredentialsService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class CredentialsService implements UserDetailsService {
 
     private final CredentialsRepository repository;
 

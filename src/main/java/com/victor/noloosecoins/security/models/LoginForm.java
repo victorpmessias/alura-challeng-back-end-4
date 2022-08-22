@@ -1,16 +1,18 @@
 package com.victor.noloosecoins.security.models;
 
-public class CredentialsDto {
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+public class LoginForm {
 
     private String email;
     private String password;
 
-    public CredentialsDto(String email, String password) {
+    public LoginForm(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public CredentialsDto() {
+    public LoginForm() {
     }
 
     public String getEmail() {
@@ -27,5 +29,9 @@ public class CredentialsDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UsernamePasswordAuthenticationToken convertToAuthToken(){
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 }

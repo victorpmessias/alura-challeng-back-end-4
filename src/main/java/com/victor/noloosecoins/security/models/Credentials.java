@@ -14,9 +14,9 @@ public class Credentials implements UserDetails {
 
     @Id
     private Long id;
-    private String email;
+    private String username;
     private String password;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
@@ -27,39 +27,20 @@ public class Credentials implements UserDetails {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+        return roles;
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return username;
     }
 
     @Override
@@ -90,13 +71,13 @@ public class Credentials implements UserDetails {
         Credentials that = (Credentials) o;
 
         if (!id.equals(that.id)) return false;
-        return email.equals(that.email);
+        return username.equals(that.username);
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + email.hashCode();
+        result = 31 * result + username.hashCode();
         return result;
     }
 }

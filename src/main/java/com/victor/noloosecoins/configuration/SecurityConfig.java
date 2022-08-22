@@ -1,6 +1,10 @@
 package com.victor.noloosecoins.configuration;
 
 import com.victor.noloosecoins.security.filters.AuthenticationFilter;
+import com.victor.noloosecoins.security.filters.CustomAuthenticationManager;
+import com.victor.noloosecoins.security.services.CredentialsRepository;
+import com.victor.noloosecoins.security.services.CredentialsService;
+import com.victor.noloosecoins.security.services.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -17,32 +20,35 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    private final TokenService tokenService;
+    private final CredentialsRepository credentialsRepository;
+    private final CredentialsService credentialsService;
+    public SecurityConfig(TokenService tokenService, CredentialsRepository credentialsRepository, CredentialsService credentialsService) {
+        this.tokenService = tokenService;
+        this.credentialsRepository = credentialsRepository;
+        this.credentialsService = credentialsService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable();
-        http.authorizeRequests().anyRequest().authenticated()
+
+        http.authorizeRequests()
+                .antMatchers("/users").permitAll()
+                .anyRequest().authenticated()
                 .and()
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .authenticationManager(new CustomAuthenticationManager(credentialsService))
+                .addFilterBefore(new AuthenticationFilter(tokenService, credentialsRepository), UsernamePasswordAuthenticationFilter.class)
+        ;
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-        return auth.build();
-    }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+
+
+
+
 
 }
