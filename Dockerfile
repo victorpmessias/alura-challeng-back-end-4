@@ -1,6 +1,9 @@
 FROM maven:3.8.6-amazoncorretto-17 AS build
 COPY src /home/no-loose-coins/src
 COPY pom.xml /home/no-loose-coins
+ARG JWT_ISSUER=${JWT_ISSUER}
+ARG EXPIRATION_TIME=${EXPIRATION_TIME}
+ARG JWT_SECRET=${JWT_SECRET}
 ARG TEST_SCRIPT_FLYWAY_DIR=/home/no-loose-coins/src/test/resources/db/migration/h2
 RUN mvn -f /home/no-loose-coins/pom.xml clean package
 
