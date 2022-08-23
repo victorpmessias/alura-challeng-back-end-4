@@ -73,7 +73,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error trying fetch data";
-        FieldErroDto error = new FieldErroDto("date", fieldMessage);
+        FieldErroDto error = new FieldErroDto("", fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -96,7 +96,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error trying fetch data";
-        FieldErroDto error = new FieldErroDto("date", fieldMessage);
+        FieldErroDto error = new FieldErroDto("", fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -141,4 +141,27 @@ public class CustomRestExceptionAdvice {
 
         return responseDto;
     }
+
+
+    @ExceptionHandler(AlreadyRegisteredDescription.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(AlreadyRegisteredDescription ex) {
+
+        String fieldMessage =
+                "There is already an expense registry with given description on month";
+
+
+        String message = "Error trying fetch data";
+        FieldErroDto error = new FieldErroDto("description", fieldMessage);
+
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+    }
+
+
 }

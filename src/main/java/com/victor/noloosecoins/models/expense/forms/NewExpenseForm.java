@@ -70,4 +70,13 @@ public class NewExpenseForm {
         expense.setValue(this.value);
         return expense;
     }
+
+    public Expense convertToExpenseEntity(Long id){
+        Expense expense = new Expense();
+        expense.setId(id);
+        expense.setDescription(this.description);
+        expense.setDate(this.date);
+        expense.setValue(this.value);
+        return expense;
+    }
 }

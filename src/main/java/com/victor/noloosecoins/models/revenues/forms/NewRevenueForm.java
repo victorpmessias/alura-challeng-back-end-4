@@ -53,8 +53,16 @@ public class NewRevenueForm {
     }
 
 
-    public Revenue convertToExpenseEntity(){
+    public Revenue convertToRevenueEntity(){
         Revenue revenue = new Revenue();
+        revenue.setDescription(this.description);
+        revenue.setDate(this.date);
+        revenue.setValue(this.value);
+        return revenue;
+    }
+    public Revenue convertToRevenueEntity(Long id){
+        Revenue revenue = new Revenue();
+        revenue.setId(id);
         revenue.setDescription(this.description);
         revenue.setDate(this.date);
         revenue.setValue(this.value);
