@@ -27,11 +27,15 @@ public class SecurityConfig {
     private final CredentialsService credentialsService;
 
     private static final String[] AUTH_WHITELIST = {
-            "/authenticate",
+            "/v2/api-docs",
+            "/swagger-resources",
             "/swagger-resources/**",
-            "/swagger-ui/**",
-            "/v3/api-docs",
-            "/webjars/**"
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
     };
 
     public SecurityConfig(TokenService tokenService, CredentialsRepository credentialsRepository, CredentialsService credentialsService) {
