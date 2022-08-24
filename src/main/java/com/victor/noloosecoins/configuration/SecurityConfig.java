@@ -26,6 +26,14 @@ public class SecurityConfig {
     private final CredentialsRepository credentialsRepository;
     private final CredentialsService credentialsService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/authenticate",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v3/api-docs",
+            "/webjars/**"
+    };
+
     public SecurityConfig(TokenService tokenService, CredentialsRepository credentialsRepository, CredentialsService credentialsService) {
         this.tokenService = tokenService;
         this.credentialsRepository = credentialsRepository;
@@ -36,6 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/register").permitAll()
                 .anyRequest().authenticated()
@@ -47,17 +56,6 @@ public class SecurityConfig {
                 .addFilterBefore(new AuthenticationFilter(tokenService, credentialsRepository), UsernamePasswordAuthenticationFilter.class)
         ;
         return http.build();
-    }
-
-    @Bean
-
-    public WebSecurityCustomizer configure() {
-        return web -> web.ignoring().antMatchers("/v3/api-docs",
-                "/configuration/ui",
-                "/swagger-resources/**",
-                "/configuration/security",
-                "/swagger-ui.html",
-                "/webjars/**");
     }
 
 
