@@ -1,7 +1,6 @@
 package com.victor.noloosecoins.tools;
 
 import com.victor.noloosecoins.exceptions.InvalidDateArgumentException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 public class Validator {
 

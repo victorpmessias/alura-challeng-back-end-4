@@ -5,7 +5,6 @@ import com.victor.noloosecoins.models.category.Category;
 import com.victor.noloosecoins.models.expense.Expense;
 import com.victor.noloosecoins.models.expense.dto.ExpenseDto;
 import com.victor.noloosecoins.models.expense.forms.NewExpenseForm;
-import com.victor.noloosecoins.models.revenues.Revenue;
 import com.victor.noloosecoins.repositories.ExpenseRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;

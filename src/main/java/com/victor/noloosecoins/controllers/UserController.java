@@ -1,9 +1,7 @@
 package com.victor.noloosecoins.controllers;
 
-import com.victor.noloosecoins.models.user.User;
 import com.victor.noloosecoins.models.user.dtos.UserDto;
 import com.victor.noloosecoins.models.user.forms.UserForm;
-import com.victor.noloosecoins.repositories.UserRepository;
 import com.victor.noloosecoins.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

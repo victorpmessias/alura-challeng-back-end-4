@@ -6,7 +6,6 @@ import com.victor.noloosecoins.models.revenues.Revenue;
 import com.victor.noloosecoins.models.summary.Summary;
 import com.victor.noloosecoins.repositories.ExpenseRepository;
 import com.victor.noloosecoins.repositories.RevenueRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
