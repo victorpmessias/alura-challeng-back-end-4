@@ -3,8 +3,10 @@ package com.victor.noloosecoins.controllers;
 import com.victor.noloosecoins.models.revenues.dto.RevenueDto;
 import com.victor.noloosecoins.models.revenues.forms.NewRevenueForm;
 import com.victor.noloosecoins.services.RevenueService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,14 +20,20 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/revenues")
+@Tag(name = "Revenues Controller", description = "URIs to manage, register and retrieve revenues registries")
 public class RevenuesController {
 
     private final RevenueService service;
 
     public RevenuesController(RevenueService service) {
         this.service = service;
+
     }
 
+    @Operation(description = "Return a list of all registered revenues")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Return a page with list of revenues found"),
+    })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<RevenueDto> getAll(Pageable pageable, @RequestParam(required = false) String description) {
         if(description != null){
@@ -61,8 +69,6 @@ public class RevenuesController {
     @GetMapping(path ="/{year}/{month}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "403"),
-            @ApiResponse(responseCode = "500"),
     })
     public Page<RevenueDto> getRevenueByMonth(@PathVariable int year, @PathVariable int month, Pageable pageable){
         return service.searchRevenueByMonth(year, month, pageable);

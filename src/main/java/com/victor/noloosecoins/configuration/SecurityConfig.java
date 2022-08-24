@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,6 +25,7 @@ public class SecurityConfig {
     private final TokenService tokenService;
     private final CredentialsRepository credentialsRepository;
     private final CredentialsService credentialsService;
+
     public SecurityConfig(TokenService tokenService, CredentialsRepository credentialsRepository, CredentialsService credentialsService) {
         this.tokenService = tokenService;
         this.credentialsRepository = credentialsRepository;
@@ -33,8 +36,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/auth").permitAll()
-                .antMatchers(HttpMethod.POST,"/users/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
@@ -46,10 +49,16 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
 
-
-
-
+    public WebSecurityCustomizer configure() {
+        return web -> web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
+    }
 
 
 }
