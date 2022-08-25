@@ -6,17 +6,22 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class NewRevenueForm {
 
+    @NotBlank(message = "description can't be blank")
     @Length(min = 0 , max = 255)
     private String description;
+    @NotNull(message = "value field is required")
     @Digits(integer = 9, fraction = 2)
     private BigDecimal value;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
+    @NotNull(message = "date field is required")
     private LocalDate date;
 
     public NewRevenueForm() {

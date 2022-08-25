@@ -91,7 +91,9 @@ public class ExpenseService {
         for(Expense registeredExpense : expenses){
             if(registeredExpense.getDescription().equalsIgnoreCase(newExpense.getDescription())
                     && newExpense.getId() == null
-                    || !registeredExpense.getId().equals(newExpense.getId())) throw new AlreadyRegisteredDescription("Have been find an expense with same description registered in this month");
+                    || !registeredExpense.getId().equals(newExpense.getId())){
+                throw new AlreadyRegisteredDescription("Have been find an expense with same description registered in this month");
+            }
         }
     }
 }

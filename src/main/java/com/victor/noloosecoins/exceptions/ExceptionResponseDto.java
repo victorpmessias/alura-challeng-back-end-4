@@ -1,11 +1,13 @@
 package com.victor.noloosecoins.exceptions;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExceptionResponseDto {
 
     private String message;
-    private List<FieldErroDto> errors;
+    private List<FieldErrorDto> errors;
     private Long timestamp;
 
 
@@ -17,11 +19,11 @@ public class ExceptionResponseDto {
         this.message = message;
     }
 
-    public List<FieldErroDto> getErrors() {
+    public List<FieldErrorDto> getErrors() {
         return errors;
     }
 
-    public void setErrors(List<FieldErroDto> errors) {
+    public void setErrors(List<FieldErrorDto> errors) {
         this.errors = errors;
     }
 

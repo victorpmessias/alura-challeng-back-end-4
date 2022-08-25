@@ -3,6 +3,7 @@ package com.victor.noloosecoins.exceptions;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,19 +11,36 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestControllerAdvice
 public class CustomRestExceptionAdvice {
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(HttpMediaTypeNotSupportedException ex) {
+        String message = "invalid media type";
+        FieldErrorDto error = new FieldErrorDto();
+        error.setError("payload media type is not valid in this operation");
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+    }
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponseDto handler(MethodArgumentNotValidException ex) {
         String message = "Error trying fetch data";
-        List<FieldErroDto> errors = ex.getBindingResult().getFieldErrors().stream().map(error -> {
-            FieldErroDto field = new FieldErroDto();
+        List<FieldErrorDto> errors = ex.getBindingResult().getFieldErrors().stream().map(error -> {
+            FieldErrorDto field = new FieldErrorDto();
             field.setField(error.getField());
-            field.setMessage(error.getDefaultMessage());
+            field.setError(error.getDefaultMessage());
             return field;
         }).toList();
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -32,12 +50,12 @@ public class CustomRestExceptionAdvice {
         return responseDto;
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponseDto handler(HttpMessageNotReadableException ex) {
+    public ExceptionResponseDto handler(DateTimeParseException ex) {
         String message = "Error trying to convert date";
-        FieldErroDto error = new FieldErroDto();
-        error.setMessage(ex.getMessage());
+        FieldErrorDto error = new FieldErrorDto();
+        error.setError("date has not in correct format, must be dd/MM/yyyy");
         error.setField("date");
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -48,11 +66,52 @@ public class CustomRestExceptionAdvice {
         return responseDto;
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(HttpMessageNotReadableException ex) {
+        if(ex.getCause().toString().contains("JsonParseException")){
+            return badJsonFormatHandler(ex);
+        }
+        if(ex.getCause().toString().contains("DateTimeParseException")){
+            return badDateFormatHandler(ex);
+        }
+        return null;
+    }
+
+    private ExceptionResponseDto badDateFormatHandler(HttpMessageNotReadableException ex){
+        String message = "Error trying to convert date";
+        FieldErrorDto error = new FieldErrorDto();
+        error.setError("date has not in correct format, must be dd/MM/yyyy");
+
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+
+    }
+    private ExceptionResponseDto badJsonFormatHandler(HttpMessageNotReadableException ex){
+        String message = "Error fetching json";
+        FieldErrorDto error = new FieldErrorDto();
+        error.setError("json is in a invalid format");
+        error.setField("error");
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponseDto handler(EntityNotFoundException ex) {
         String message = "Resource Not Found";
-        FieldErroDto error = new FieldErroDto("id", ex.getMessage());
+        FieldErrorDto error = new FieldErrorDto("id", ex.getMessage());
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
         responseDto.setMessage(message);
@@ -73,7 +132,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error trying fetch data";
-        FieldErroDto error = new FieldErroDto("", fieldMessage);
+        FieldErrorDto error = new FieldErrorDto(null, fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -96,7 +155,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error trying fetch data";
-        FieldErroDto error = new FieldErroDto("", fieldMessage);
+        FieldErrorDto error = new FieldErrorDto(null, fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -114,7 +173,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error during parse";
-        FieldErroDto error = new FieldErroDto("parameters", ex.getMessage());
+        FieldErrorDto error = new FieldErrorDto("parameters", ex.getMessage());
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -131,7 +190,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error";
-        FieldErroDto error = new FieldErroDto("parameters", ex.getMessage());
+        FieldErrorDto error = new FieldErrorDto("parameters", ex.getMessage());
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
@@ -152,7 +211,7 @@ public class CustomRestExceptionAdvice {
 
 
         String message = "Error trying fetch data";
-        FieldErroDto error = new FieldErroDto("description", fieldMessage);
+        FieldErrorDto error = new FieldErrorDto("description", fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
