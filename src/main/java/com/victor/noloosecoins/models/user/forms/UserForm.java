@@ -1,12 +1,22 @@
 package com.victor.noloosecoins.models.user.forms;
 
 import com.victor.noloosecoins.models.user.User;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class UserForm {
 
 
+    @NotBlank(message = "name can't be blank")
     private String name;
+    @Email(message = "email is in a not valid format")
     private String email;
+    @Length(min = 8, max = 60, message = "password must have at lest 8 characters")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
+            message = "password must have at least one upper case, one lower case, one number, one of the special characters '@#$%^&+=' ")
     private String password;
 
     public UserForm() {
