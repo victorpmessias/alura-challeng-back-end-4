@@ -5,6 +5,8 @@ import com.victor.noloosecoins.models.expense.forms.NewExpenseForm;
 import com.victor.noloosecoins.services.ExpenseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +57,7 @@ public class ExpensesController {
     }
 
     @GetMapping("/{year}/{month}")
-    public Page<ExpenseDto> getExpenseByMonth(@PathVariable int year, @PathVariable int month, Pageable pageable) {
+    public Page<ExpenseDto> getExpenseByMonth(@PathVariable int year, @PathVariable int month, @PageableDefault(page = 0, size = 20, sort = {"date"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return service.searchExpenseByMonth(year, month, pageable);
     }
 }

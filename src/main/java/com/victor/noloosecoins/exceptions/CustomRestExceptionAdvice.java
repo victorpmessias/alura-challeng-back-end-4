@@ -1,6 +1,7 @@
 package com.victor.noloosecoins.exceptions;
 
 import org.postgresql.util.PSQLException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -30,7 +31,6 @@ public class CustomRestExceptionAdvice {
 
         return responseDto;
     }
-
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -69,16 +69,16 @@ public class CustomRestExceptionAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponseDto handler(HttpMessageNotReadableException ex) {
-        if(ex.getCause().toString().contains("JsonParseException")){
+        if (ex.getCause().toString().contains("JsonParseException")) {
             return badJsonFormatHandler(ex);
         }
-        if(ex.getCause().toString().contains("DateTimeParseException")){
+        if (ex.getCause().toString().contains("DateTimeParseException")) {
             return badDateFormatHandler(ex);
         }
         return null;
     }
 
-    private ExceptionResponseDto badDateFormatHandler(HttpMessageNotReadableException ex){
+    private ExceptionResponseDto badDateFormatHandler(HttpMessageNotReadableException ex) {
         String message = "Error trying to convert date";
         FieldErrorDto error = new FieldErrorDto();
         error.setError("date has not in correct format, must be dd/MM/yyyy");
@@ -92,7 +92,8 @@ public class CustomRestExceptionAdvice {
         return responseDto;
 
     }
-    private ExceptionResponseDto badJsonFormatHandler(HttpMessageNotReadableException ex){
+
+    private ExceptionResponseDto badJsonFormatHandler(HttpMessageNotReadableException ex) {
         String message = "Error fetching json";
         FieldErrorDto error = new FieldErrorDto();
         error.setError("json is in a invalid format");
@@ -208,13 +209,9 @@ public class CustomRestExceptionAdvice {
 
         String fieldMessage =
                 "There is already an expense registry with given description on month";
-
-
-
-        String message = "Error trying fetch data";
         FieldErrorDto error = new FieldErrorDto("description", fieldMessage);
 
-
+        String message = "Error trying fetch data";
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
         responseDto.setMessage(message);
         responseDto.setErrors(List.of(error));
@@ -223,5 +220,22 @@ public class CustomRestExceptionAdvice {
         return responseDto;
     }
 
+    @ExceptionHandler(PropertyReferenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponseDto handler(PropertyReferenceException ex) {
+
+        String message =
+                "Invalid field name";
+
+        FieldErrorDto error = new FieldErrorDto("sort", ex.getMessage());
+
+        ExceptionResponseDto responseDto = new ExceptionResponseDto();
+        responseDto.setMessage(message);
+
+        responseDto.setErrors(List.of(error));
+        responseDto.setTimestamp(System.currentTimeMillis());
+
+        return responseDto;
+    }
 
 }
