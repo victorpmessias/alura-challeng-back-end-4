@@ -32,7 +32,7 @@ public class UserService {
     public UserDto registerNewUser(UserForm userForm) {
         checkIfEmailIsAlreadyRegistered(userForm.getEmail());
 
-        User user = userForm.getUser();
+        User user = userForm.convertToUser();
         user = repository.save(user);
         if(user.getId() != null){
             credentialsService.createCredentials(user.getEmail(), userForm.getPassword());

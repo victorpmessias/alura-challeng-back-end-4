@@ -52,7 +52,7 @@ public class UserForm {
         this.password = password;
     }
 
-    public User getUser() {
+    public User convertToUser() {
         User user = new User();
         user.setEmail(this.email);
         user.setName(this.name);
