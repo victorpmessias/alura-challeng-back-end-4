@@ -35,24 +35,14 @@ public class RevenueService {
         return new RevenueDto(revenue);
     }
 
-    private void checkIfExistAnEqualsDescriptionWithinTheMonth(Revenue newRevenue) {
-        LocalDate start = newRevenue.getDate().withDayOfMonth(1);
-        LocalDate endDate = newRevenue.getDate().plusMonths(1).withDayOfMonth(1).minusDays(1);
-        List<Revenue> revenues = repository.findByDateBetween(start, endDate);
-        for(Revenue registeredRevenue : revenues){
-            if(registeredRevenue.getDescription().equalsIgnoreCase(newRevenue.getDescription())
-                    && newRevenue.getId() == null
-                    || !registeredRevenue.getId().equals(newRevenue.getId())) throw new AlreadyRegisteredDescription("Have been find a revenue with same description registered in this month");
-        }
-    }
-
     public RevenueDto updateRegistry(NewRevenueForm form, Long id) {
         Revenue revenue = getRevenueById(id);
-        checkIfExistAnEqualsDescriptionWithinTheMonth(form.convertToRevenueEntity(id));
+        if(!form.getDescription().equalsIgnoreCase(revenue.getDescription()) || !form .getDate().equals(revenue.getDate())){
+            checkIfExistAnEqualsDescriptionWithinTheMonth(form.convertToRevenueEntity(id));
+            revenue.setDescription(form.getDescription());
+        }
         revenue.setValue(form.getValue());
-        revenue.setDescription(form.getDescription());
         revenue.setDate(form.getDate());
-
         return new RevenueDto(revenue);
     }
 
@@ -74,16 +64,23 @@ public class RevenueService {
         }
     }
 
-
     public Page<RevenueDto> searchRevenueByMonth(int year, int month, Pageable pageable) {
         LocalDate initialDate = LocalDate.of(year, month, 1);
         LocalDate endDate = LocalDate.ofEpochDay(initialDate.toEpochDay()).plusMonths(1).withDayOfMonth(1).minusDays(1);
         Page<Revenue> revenue = repository.findByDateBetween(initialDate, endDate, pageable);
         return revenue.map(RevenueDto::new);
     }
+
     public Page<RevenueDto> listAllByDescription(Pageable pageable, String description) {
         Page<Revenue> revenues = repository.findAllByDescriptionContains(description, pageable);
         return revenues.map(RevenueDto::new);
+    }
 
+    private void checkIfExistAnEqualsDescriptionWithinTheMonth(Revenue newRevenue) {
+        LocalDate start = newRevenue.getDate().withDayOfMonth(1);
+        LocalDate endDate = newRevenue.getDate().plusMonths(1).withDayOfMonth(1).minusDays(1);
+        if(repository.existsByDateBetweenAndDescription(start, endDate, newRevenue.getDescription())){
+            throw new AlreadyRegisteredDescription("Have been find a revenue with same description registered in this month");
+        }
     }
 }

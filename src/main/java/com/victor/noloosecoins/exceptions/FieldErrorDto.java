@@ -2,7 +2,6 @@ package com.victor.noloosecoins.exceptions;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FieldErrorDto {
 
     private String field;

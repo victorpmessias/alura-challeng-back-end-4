@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -43,9 +44,11 @@ public class ExpenseService {
 
     public ExpenseDto updateRegistry(NewExpenseForm form, Long id) {
         Expense expense = getExpenseById(id);
-        checkIfExistAnEqualsDescriptionWithinTheMonth(form.convertToExpenseEntity(id));
+        if(!form.getDescription().equalsIgnoreCase(expense.getDescription()) || !form .getDate().equals(expense.getDate())){
+            checkIfExistAnEqualsDescriptionWithinTheMonth(form.convertToExpenseEntity(id));
+            expense.setDescription(form.getDescription());
+        }
         expense.setValue(form.getValue());
-        expense.setDescription(form.getDescription());
         expense.setDate(form.getDate());
         Category category = categoryService.findById(form.getCategory());
         expense.setCategory(category);
@@ -87,13 +90,8 @@ public class ExpenseService {
     private void checkIfExistAnEqualsDescriptionWithinTheMonth(Expense newExpense) {
         LocalDate start = newExpense.getDate().withDayOfMonth(1);
         LocalDate endDate = newExpense.getDate().plusMonths(1).withDayOfMonth(1).minusDays(1);
-        List<Expense> expenses = repository.findByDateBetween(start, endDate);
-        for(Expense registeredExpense : expenses){
-            if(registeredExpense.getDescription().equalsIgnoreCase(newExpense.getDescription())
-                    && newExpense.getId() == null
-                    || !registeredExpense.getId().equals(newExpense.getId())){
-                throw new AlreadyRegisteredDescription("Have been find an expense with same description registered in this month");
-            }
+        if(repository.existsByDateBetweenAndDescription(start, endDate, newExpense.getDescription())){
+            throw new AlreadyRegisteredDescription("Have been find an expense with same description registered in this month");
         }
     }
 }

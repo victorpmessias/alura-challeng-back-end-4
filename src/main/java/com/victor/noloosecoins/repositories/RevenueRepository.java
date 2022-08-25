@@ -13,6 +13,5 @@ public interface RevenueRepository extends JpaRepository<Revenue, Long> {
     Page<Revenue> findByDateBetween(LocalDate start, LocalDate end, Pageable pageable);
     List<Revenue> findByDateBetween(LocalDate start, LocalDate end);
     Page<Revenue> findAllByDescriptionContains(String description, Pageable pageable);
-
-
+    boolean existsByDateBetweenAndDescription(LocalDate startDate, LocalDate endDate, String description);
 }

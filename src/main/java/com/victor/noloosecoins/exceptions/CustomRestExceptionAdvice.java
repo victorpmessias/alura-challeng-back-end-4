@@ -210,6 +210,7 @@ public class CustomRestExceptionAdvice {
                 "There is already an expense registry with given description on month";
 
 
+
         String message = "Error trying fetch data";
         FieldErrorDto error = new FieldErrorDto("description", fieldMessage);
 
