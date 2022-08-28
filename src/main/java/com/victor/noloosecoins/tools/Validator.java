@@ -3,7 +3,7 @@ package com.victor.noloosecoins.tools;
 import com.victor.noloosecoins.exceptions.InvalidDateArgumentException;
 
 public class Validator {
-
+    private Validator(){}
     public static void validYearAndMonthRequest(int year, int month) {
         int yearLength = String.valueOf(year).length();
         int monthLength = String.valueOf(month).length();

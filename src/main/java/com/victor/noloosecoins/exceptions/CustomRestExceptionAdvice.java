@@ -17,6 +17,9 @@ import java.util.List;
 
 @RestControllerAdvice
 public class CustomRestExceptionAdvice {
+    private static final String FETCH_DATA_MESSAGE = "Error trying fetch data";
+    private static final String UNEXPECTED_ERROR_MESSAGE = "Unexpected error";
+
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponseDto handler(HttpMediaTypeNotSupportedException ex) {
@@ -36,7 +39,6 @@ public class CustomRestExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponseDto handler(MethodArgumentNotValidException ex) {
-        String message = "Error trying fetch data";
         List<FieldErrorDto> errors = ex.getBindingResult().getFieldErrors().stream().map(error -> {
             FieldErrorDto field = new FieldErrorDto();
             field.setField(error.getField());
@@ -44,7 +46,7 @@ public class CustomRestExceptionAdvice {
             return field;
         }).toList();
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
-        responseDto.setMessage(message);
+        responseDto.setMessage(FETCH_DATA_MESSAGE);
         responseDto.setErrors(errors);
         responseDto.setTimestamp(System.currentTimeMillis());
         return responseDto;
@@ -70,15 +72,15 @@ public class CustomRestExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponseDto handler(HttpMessageNotReadableException ex) {
         if (ex.getCause().toString().contains("JsonParseException")) {
-            return badJsonFormatHandler(ex);
+            return badJsonFormatHandler();
         }
         if (ex.getCause().toString().contains("DateTimeParseException")) {
-            return badDateFormatHandler(ex);
+            return badDateFormatHandler();
         }
         return null;
     }
 
-    private ExceptionResponseDto badDateFormatHandler(HttpMessageNotReadableException ex) {
+    private ExceptionResponseDto badDateFormatHandler() {
         String message = "Error trying to convert date";
         FieldErrorDto error = new FieldErrorDto();
         error.setError("date has not in correct format, must be dd/MM/yyyy");
@@ -93,7 +95,7 @@ public class CustomRestExceptionAdvice {
 
     }
 
-    private ExceptionResponseDto badJsonFormatHandler(HttpMessageNotReadableException ex) {
+    private ExceptionResponseDto badJsonFormatHandler() {
         String message = "Error fetching json";
         FieldErrorDto error = new FieldErrorDto();
         error.setError("json is in a invalid format");
@@ -129,15 +131,14 @@ public class CustomRestExceptionAdvice {
         String fieldMessage =
                 ex.getMessage().contains(".description")
                         ? "There is already an expense registry with given description"
-                        : "Error";
+                        : UNEXPECTED_ERROR_MESSAGE;
 
 
-        String message = "Error trying fetch data";
         FieldErrorDto error = new FieldErrorDto(null, fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
-        responseDto.setMessage(message);
+        responseDto.setMessage(FETCH_DATA_MESSAGE);
         responseDto.setErrors(List.of(error));
         responseDto.setTimestamp(System.currentTimeMillis());
 
@@ -152,15 +153,14 @@ public class CustomRestExceptionAdvice {
         String fieldMessage =
                 ex.getMessage().contains("_description")
                         ? "There is already an expense registry with given description"
-                        : "Error";
+                        : UNEXPECTED_ERROR_MESSAGE;
 
 
-        String message = "Error trying fetch data";
         FieldErrorDto error = new FieldErrorDto(null, fieldMessage);
 
 
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
-        responseDto.setMessage(message);
+        responseDto.setMessage(FETCH_DATA_MESSAGE);
         responseDto.setErrors(List.of(error));
         responseDto.setTimestamp(System.currentTimeMillis());
 
@@ -190,7 +190,7 @@ public class CustomRestExceptionAdvice {
     public ExceptionResponseDto handler(InvalidEmailException ex) {
 
 
-        String message = "Error";
+        String message = "Error during email parse";
         FieldErrorDto error = new FieldErrorDto("parameters", ex.getMessage());
 
 
@@ -211,9 +211,8 @@ public class CustomRestExceptionAdvice {
                 "There is already an expense registry with given description on month";
         FieldErrorDto error = new FieldErrorDto("description", fieldMessage);
 
-        String message = "Error trying fetch data";
         ExceptionResponseDto responseDto = new ExceptionResponseDto();
-        responseDto.setMessage(message);
+        responseDto.setMessage(FETCH_DATA_MESSAGE);
         responseDto.setErrors(List.of(error));
         responseDto.setTimestamp(System.currentTimeMillis());
 

@@ -27,7 +27,9 @@ public class CredentialsService implements UserDetailsService {
 
 
     public Credentials createCredentials(String email, String password) {
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
         Credentials credentials = new Credentials();
         Role role = roleRepository.findByAuthority("ROLE_USER");
         credentials.setUsername(email);

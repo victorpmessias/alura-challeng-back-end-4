@@ -32,7 +32,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             authenticate(token);
         }
         filterChain.doFilter(request,response);
-
     }
 
     private void authenticate(String token){

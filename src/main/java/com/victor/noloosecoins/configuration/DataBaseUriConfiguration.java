@@ -1,5 +1,6 @@
 package com.victor.noloosecoins.configuration;
 
+import com.victor.noloosecoins.exceptions.EnvironmentUriDataBaseException;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +37,7 @@ public class DataBaseUriConfiguration {
             String uriString = System.getenv("DATABASE_URL");
             return new URI(uriString);
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new EnvironmentUriDataBaseException("Error trying to get data base uri from environment");
         }
     }
 }
